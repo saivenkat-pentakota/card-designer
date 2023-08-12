@@ -1,9 +1,14 @@
 import React from "react";
+import { Navigate } from "react-router-dom";
+import { useUserAuth } from "../context/userAuthContext";
+const ProtectedRoute = ({ children }) => {
+  const { user } = useUserAuth();
 
-const ProtectedRoute = () =>{
-    return(
-        <div></div>
-    );
-}
+  console.log("Check user in Private: ", user);
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
 
 export default ProtectedRoute;

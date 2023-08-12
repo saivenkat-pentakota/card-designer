@@ -1,15 +1,19 @@
-import { initializeApp } from "firebase/app";
+import firebase from "firebase/compat/app";
+import  "firebase/compat/auth";
  
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAuDp-tz8vpdggNA_asg6KeCWhx-Rw_dJ8",
-  authDomain: "cardsdesigner-f6ef5.firebaseapp.com",
-  projectId: "cardsdesigner-f6ef5",
-  storageBucket: "cardsdesigner-f6ef5.appspot.com",
-  messagingSenderId: "1097332061504",
-  appId: "1:1097332061504:web:3226fcb9248b28b17e76a5"
+  apiKey: "AIzaSyBZTC5FsoLy8mN66X_vXYEGHAVy7FHWnJQ",
+  authDomain: "carddesigner-86581.firebaseapp.com",
+  projectId: "carddesigner-86581",
+  storageBucket: "carddesigner-86581.appspot.com",
+  messagingSenderId: "171959224901",
+  appId: "1:171959224901:web:8c74eb7996ff9fbc7bf12c",
+  measurementId: "G-WM4YZVYKVW"
 };
 
-const app = initializeApp(firebaseConfig);
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+export {auth,firebaseApp};
 
 
