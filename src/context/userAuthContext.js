@@ -6,6 +6,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   onAuthStateChanged,
+  RecaptchaVerifier,
+  signInWithPhoneNumber
 } from "firebase/auth";
 import { auth } from "../firebase";
 
@@ -35,6 +37,13 @@ function googleSignIn() {
   return signInWithPopup(auth, googleAuthProvider);
 }
 
+// recaptcha
+function setUpRecaptcha(number){
+  const recaptchaVerifier = new RecaptchaVerifier("recaptcha-container",{},auth);
+  RecaptchaVerifier.render();
+  return signInWithPhoneNumber(auth, number, recaptchaVerifier);
+}
+
   useEffect (() =>{
     const unsubscribe = onAuthStateChanged(auth,(currentUser) =>{
         console.log("Auth",currentUser);
@@ -47,7 +56,7 @@ function googleSignIn() {
 
   }, []);
 
-  return( <userAuthContext.Provider value = {{user,signUp,logIn,logOut,googleSignIn}}>{children}</userAuthContext.Provider>);
+  return( <userAuthContext.Provider value = {{user,signUp,logIn,logOut,googleSignIn,setUpRecaptcha}}>{children}</userAuthContext.Provider>);
 }
 
 export function useUserAuth() {

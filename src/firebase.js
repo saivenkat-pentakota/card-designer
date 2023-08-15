@@ -3,13 +3,13 @@ import  "firebase/compat/auth";
  
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBZTC5FsoLy8mN66X_vXYEGHAVy7FHWnJQ",
-  authDomain: "carddesigner-86581.firebaseapp.com",
-  projectId: "carddesigner-86581",
-  storageBucket: "carddesigner-86581.appspot.com",
-  messagingSenderId: "171959224901",
-  appId: "1:171959224901:web:8c74eb7996ff9fbc7bf12c",
-  measurementId: "G-WM4YZVYKVW"
+  apiKey: "AIzaSyBGrMjNkPkjhgLAdQt5zQo22PvCps-s9XY",
+  authDomain: "cardswebdesign.firebaseapp.com",
+  projectId: "cardswebdesign",
+  storageBucket: "cardswebdesign.appspot.com",
+  messagingSenderId: "665662139646",
+  appId: "1:665662139646:web:89b59e1892793419c3c9af",
+  measurementId: "G-ZK9NBJRGDS"
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
