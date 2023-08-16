@@ -40,7 +40,7 @@ function googleSignIn() {
 // recaptcha
 function setUpRecaptcha(number){
   const recaptchaVerifier = new RecaptchaVerifier("recaptcha-container",{},auth);
-  RecaptchaVerifier.render();
+  recaptchaVerifier.render();
   return signInWithPhoneNumber(auth, number, recaptchaVerifier);
 }
 
