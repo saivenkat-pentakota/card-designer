@@ -11,6 +11,11 @@ import {UserAuthContextProvider} from './context/userAuthContext';
 
 
 function App() {
+
+  
+
+
+
   return (
     <div className="App d-flex flex-column justify-content-center" style={{alignItems:"center"}}>
           <UserAuthContextProvider>
