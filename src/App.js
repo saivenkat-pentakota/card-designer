@@ -3,11 +3,11 @@ import { Route ,Routes} from "react-router-dom";
 
 // importing components
 import Home from "./components/home";
-import LoginForm from './components/login';
 import SignUpForm from './components/signup';
 import PhoneSignUp from './components/PhoneSignUp';
 import ProtectedRoute from './components/protectedRoute';
 import {UserAuthContextProvider} from './context/userAuthContext';
+import Explorer from "./components/explorer/explorer";
 
 
 function App() {
@@ -25,7 +25,7 @@ function App() {
                 <Home/>
               </ProtectedRoute>
             }/>
-            <Route path = "/" element = {<LoginForm/>}/>  
+            <Route path = "/" element = {<Explorer/>}/>  
             <Route path = "/signup" element = {<SignUpForm/>}/>  
             <Route path = "/phonesignup" element = {<PhoneSignUp/>}/>
           </Routes>
