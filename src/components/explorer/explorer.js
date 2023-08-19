@@ -3,9 +3,12 @@ import "./explorer.css";
 import menuSvg from "../../assets/images/explorer/menu.svg";
 import lineItemSvg from "../../assets/images/explorer/line item.svg";
 import unlockSvg from "../../assets/images/tabs/unlock.svg";
+import ExplorerService from "../../shared/service/explorerService";
 
 
 const Explorer = () => {
+  const explorerService = new ExplorerService();
+
   const tabContentMargin ={
     "--tab-content-margi":"9px",
   }
@@ -17,8 +20,12 @@ const Explorer = () => {
           <div className="mock-browser">
             <div className="chrome-tabs" style={tabContentMargin}>
               <div className="chrome-tabs-content">
-                <div className="chrome-tab" 
-                  style={{'width':(tabWidth)+'px','transform':'translate3d('+0*(tabWidth-23)+'px, 0, 0)'}}>
+              {(() => {
+                let tabData =[];
+                for(let tabIndex=0;tabIndex<explorerService.explorerData.tabs.length;tabIndex++){
+                  tabData.push(
+                  <div className="chrome-tab" active={(explorerService.explorerData.activeTabId === tabIndex)+""}                  
+                  style={{'width':(tabWidth)+'px','transform':'translate3d('+tabIndex*(tabWidth-20)+'px, 0, 0)'}}>
                   <div className="chrome-tab-dividers"></div>
                   <div className="chrome-tab-background">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
@@ -42,74 +49,17 @@ const Explorer = () => {
                   </div>
                   <div className="chrome-tab-content">
                     <div className="chrome-tab-favicon-active"></div>
-                    <div className="chrome-tab-title">title</div>
+                    <div className="chrome-tab-title">{explorerService.explorerData.tabs[tabIndex].desc}</div>
                     <div className="chrome-tab-drag-handle"></div>
-                    <div className="chrome-tab-close"></div>
+                    {explorerService.explorerData.tabs[tabIndex].id != "FE_0000001" &&
+                     <div className="chrome-tab-close"></div> 
+                    }                    
                   </div>
                 </div>
-
-                
-                <div className="chrome-tab" active="true"
-                  style={{'width':(tabWidth)+'px','transform':'translate3d('+1*(tabWidth-23)+'px, 0, 0)'}}>
-                  <div className="chrome-tab-dividers"></div>
-                  <div className="chrome-tab-background">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <symbol id="chrome-tab-geometry-left" viewBox="0 0 214 36">
-                          <path d="M17 0h197v36H0v-2c4.5 0 9-3.5 9-8V8c0-4.5 3.5-8 8-8z" />
-                        </symbol>
-                        <symbol id="chrome-tab-geometry-right" viewBox="0 0 214 36">
-                          <use xlinkHref="#chrome-tab-geometry-left" />
-                        </symbol>
-                        <clipPath id="crop">
-                          <rect className="mask" width="100%" height="100%" x="0" />
-                        </clipPath>
-                      </defs><svg width="52%" height="100%">
-                        <use xlinkHref="#chrome-tab-geometry-left" width="214" height="36" className="chrome-tab-geometry" />
-                      </svg>
-                      <g transform="scale(-1, 1)"><svg width="52%" height="100%" x="-100%" y="0">
-                          <use xlinkHref="#chrome-tab-geometry-right" width="214" height="36" className="chrome-tab-geometry" />
-                        </svg></g>
-                    </svg>
-                  </div>
-                  <div className="chrome-tab-content">
-                    <div className="chrome-tab-favicon"></div>
-                    <div className="chrome-tab-title">title</div>
-                    <div className="chrome-tab-drag-handle"></div>
-                    <div className="chrome-tab-close"></div>
-                  </div>
-                </div> 
-
-                <div className="chrome-tab"
-                  style={{'width':(tabWidth)+'px','transform':'translate3d('+2*(tabWidth-23)+'px, 0, 0)'}}>
-                  <div className="chrome-tab-dividers"></div>
-                  <div className="chrome-tab-background">
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <symbol id="chrome-tab-geometry-left" viewBox="0 0 214 36">
-                          <path d="M17 0h197v36H0v-2c4.5 0 9-3.5 9-8V8c0-4.5 3.5-8 8-8z" />
-                        </symbol>
-                        <symbol id="chrome-tab-geometry-right" viewBox="0 0 214 36">
-                          <use xlinkHref="#chrome-tab-geometry-left" />
-                        </symbol>
-                        <clipPath id="crop">
-                          <rect className="mask" width="100%" height="100%" x="0" />
-                        </clipPath>
-                      </defs><svg width="52%" height="100%">
-                        <use xlinkHref="#chrome-tab-geometry-left" width="214" height="36" className="chrome-tab-geometry" />
-                      </svg>
-                      <g transform="scale(-1, 1)"><svg width="52%" height="100%" x="-100%" y="0">
-                          <use xlinkHref="#chrome-tab-geometry-right" width="214" height="36" className="chrome-tab-geometry" />
-                        </svg></g>
-                    </svg>
-                  </div>
-                  <div className="chrome-tab-content">
-                    <div className="chrome-tab-favicon"></div>
-                    <div className="chrome-tab-title">title</div>
-                    <div className="chrome-tab-drag-handle"></div>
-                    <div className="chrome-tab-close"></div>
-                  </div>
-                </div>              
+                  )
+                }
+                return tabData;
+              })()}           
               </div>
               <div className="chrome-tabs-bottom-bar"></div>
             </div>
@@ -172,10 +122,10 @@ const Explorer = () => {
                     </div>
                     <div className="right">
                       <div className="menu menuitemactive">
-                        <img src={menuSvg} />
+                        <img src={menuSvg} alt="menu"/>
                       </div>
                       <div className="menu menuitem">
-                        <img src={lineItemSvg} />
+                        <img src={lineItemSvg} alt="lineItem"/>
                       </div>
                     </div>
                   </div>
