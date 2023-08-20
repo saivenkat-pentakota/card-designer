@@ -14,6 +14,8 @@ const Explorer = () => {
   }
   const tabWidth=258;
 
+  
+
   return (
     <>
         <div className="surface"> 
@@ -51,7 +53,7 @@ const Explorer = () => {
                     <div className="chrome-tab-favicon-active"></div>
                     <div className="chrome-tab-title">{explorerService.explorerData.tabs[tabIndex].desc}</div>
                     <div className="chrome-tab-drag-handle"></div>
-                    {explorerService.explorerData.tabs[tabIndex].id != "FE_0000001" &&
+                    {explorerService.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
                      <div className="chrome-tab-close"></div> 
                     }                    
                   </div>
