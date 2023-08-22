@@ -4,20 +4,36 @@ import menuSvg from "../../assets/images/explorer/menu.svg";
 import lineItemSvg from "../../assets/images/explorer/line item.svg";
 import unlockSvg from "../../assets/images/tabs/unlock.svg";
 import ExplorerService from "../../shared/service/explorerService";
+import ExplorerData from "../../shared/data/explorerData";
+import folderClose from "../../assets/images/menu/folderclose.svg";
 
 const tabContentMargin ={
   "--tab-content-margi":"9px",
 }
 
 class Explorer extends React.Component{
-
+  explorerService;
   constructor(){
     super();
+    this.explorerService = new ExplorerService();
     this.state = {
-      explorerService : new ExplorerService(),
+      explorerMenu : [],   
+      activeExplorerItems:[], 
+      explorerData:new ExplorerData(),  
       tabWidth:258,
-    }
+    }  
+    this.refreshExplorer();  
+  }  
+
+  async refreshExplorer(){
+    await this.explorerService.refreshExplorer();
+    this.setState({
+      explorerMenu : this.explorerService.explorerMenu,   
+      activeExplorerItems:this.explorerService.activeExplorerItems, 
+      explorerData:this.explorerService.explorerData,  
+    });
   }
+
 
   realignTabs(){
     let width = (window.innerWidth/this.state.explorerService.explorerData.tabs.length+15);
@@ -40,6 +56,30 @@ class Explorer extends React.Component{
     this.realignTabs();
   }
 
+  getExplorerItems(){
+    let explorerItems = [];
+    this.getFileChildrens(this.explorerMenu,explorerItems);
+    return explorerItems;
+  }
+
+  getFileChildrens(itemDetails,output) {
+    for (let i = 0; i < itemDetails.length; i++) {
+      if (itemDetails[i]) {
+        let details = this.getFileChildrens(itemDetails[i].children,output);
+        if (details != null) {
+          return details;
+        }
+      }
+    }
+    return null;
+  }
+
+  getExplorerItemImg(item){
+    if(item.type === "1"){
+      return <img src={folderClose} alt="folder"></img>  
+    }
+  }
+
   render() {
     return(
       <div className="surface"> 
@@ -48,9 +88,9 @@ class Explorer extends React.Component{
               <div className="chrome-tabs-content">
               {(() => {
                 let tabData =[];
-                for(let tabIndex=0;tabIndex<this.state.explorerService.explorerData.tabs.length;tabIndex++){
+                for(let tabIndex=0;tabIndex<this.state.explorerData.tabs.length;tabIndex++){
                   tabData.push(
-                  <div className="chrome-tab" active={(this.state.explorerService.explorerData.activeTabId === tabIndex)+""} 
+                  <div className="chrome-tab" active={(this.state.explorerData.activeTabId === tabIndex)+""} 
                   onClick={()=>{this.updateActiveTabId(tabIndex)}}               
                   style={{'width':(this.state.tabWidth)+'px','transform':'translate3d('+tabIndex*(this.state.tabWidth-20)+'px, 0, 0)'}}>
                   <div className="chrome-tab-dividers"></div>
@@ -75,10 +115,10 @@ class Explorer extends React.Component{
                     </svg>
                   </div>
                   <div className="chrome-tab-content">
-                    <div className={(this.state.explorerService.explorerData.activeTabId === tabIndex)?"chrome-tab-favicon-active":"chrome-tab-favicon"}></div>
-                    <div className="chrome-tab-title">{this.state.explorerService.explorerData.tabs[tabIndex].desc}</div>
+                    <div className={(this.state.explorerData.activeTabId === tabIndex)?"chrome-tab-favicon-active":"chrome-tab-favicon"}></div>
+                    <div className="chrome-tab-title">{this.state.explorerData.tabs[tabIndex].desc}</div>
                     <div className="chrome-tab-drag-handle"></div>
-                    {this.state.explorerService.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
+                    {this.state.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
                      <div className="chrome-tab-close" 
                      onClick={(e)=>{this.closeTab(e,tabIndex)}}></div> 
                     }                    
@@ -112,11 +152,10 @@ class Explorer extends React.Component{
               <div id="address-bar" className="-selected">
                 <div id="info" className="address-bar-button -show-special" data-ripple>
                   <img src={unlockSvg} alt="unlock" className="https"></img>                
-                  <div className="special">Folder</div>
                 </div>                
                 <div id="address">
-                  <input id="homesearch" autocomplete="off" type="text" 
-                  value={this.state.explorerService.explorerData.tabs[this.state.explorerService.explorerData.activeTabId].path} />
+                  <input id="homesearch" autoComplete="off" type="text" 
+                  value={this.state.explorerData.tabs[this.state.explorerData.activeTabId].path} />
                   <div className="searchresults" >
 
                   </div>
@@ -136,7 +175,7 @@ class Explorer extends React.Component{
             <div className="tabBody">
               <div className="explorer">
                 <div className="leftMenu">
-                  <ul class="directory-list">
+                  <ul className="directory-list">
                   </ul>
                 </div>
                 <div className="rightMenu">
@@ -148,16 +187,37 @@ class Explorer extends React.Component{
                       <div className="menu">
                         Favourites
                       </div>
+                      <div className="menu filesCount">
+                        Files : {this.state.activeExplorerItems.length}
+                      </div>
                     </div>
                     <div className="right">
                       <div className="menu menuitemactive">
-                        <img src={menuSvg} alt="menu" />
+                        <img src={menuSvg} alt="menu"/>
                       </div>
                       <div className="menu menuitem">
                         <img src={lineItemSvg} alt="lineItem"/>
                       </div>
                     </div>
                   </div>
+                  <div className="rightMenuBody">
+                    <div className="parent">
+                      {(()=>{
+                        let data = [];                  
+                        for(let itemIndex=0;itemIndex<this.state.activeExplorerItems.length;itemIndex++){
+                          data.push(
+                          <div className="child inline-block-child">
+                            {this.getExplorerItemImg(this.state.activeExplorerItems[itemIndex])}
+                            <div className="title">
+                              <input type="text" id={this.state.activeExplorerItems[itemIndex].name} onChange={""} value={this.state.activeExplorerItems[itemIndex].name} autoComplete="off" />
+                            </div>
+                          </div>
+                          )
+                        }
+                        return data;
+                      })()}
+                    </div>
+                 </div>
                 </div>
               </div>
             </div>
