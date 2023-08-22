@@ -6,6 +6,8 @@ import unlockSvg from "../../assets/images/tabs/unlock.svg";
 import ExplorerService from "../../shared/service/explorerService";
 import ExplorerData from "../../shared/data/explorerData";
 import folderClose from "../../assets/images/menu/folderclose.svg";
+import folderOpen from "../../assets/images/menu/folderopen.svg";
+
 
 const tabContentMargin ={
   "--tab-content-margi":"9px",
@@ -32,28 +34,34 @@ class Explorer extends React.Component{
       activeExplorerItems:this.explorerService.activeExplorerItems, 
       explorerData:this.explorerService.explorerData,  
     });
+    this.realignTabs();
+  }
+
+
+  async openinSameTab(itemDetails){
+    await this.explorerService.openInSameTab(itemDetails)
+    this.setState({
+      explorerMenu : this.explorerService.explorerMenu,   
+      activeExplorerItems:this.explorerService.activeExplorerItems, 
+      explorerData:this.explorerService.explorerData,  
+    });
   }
 
 
   realignTabs(){
-    let width = (window.innerWidth/this.state.explorerService.explorerData.tabs.length+15);
+    let width = (window.innerWidth/this.state.explorerData.tabs.length+15);
     this.setState({tabWidth:width<258?width:258});
   }
 
-  updateActiveTabId(tabIndex){
-    this.state.explorerService.openTab(tabIndex);
-    this.reRenderComponent();
+  async updateActiveTabId(tabIndex){
+    this.explorerService.openTab(tabIndex);
+    await this.refreshExplorer();
   }
 
-  closeTab(event,tabIndex){
-    this.state.explorerService.closeTab(tabIndex); 
-    this.reRenderComponent();
+  async closeTab(event,tabIndex){
+    this.explorerService.closeTab(tabIndex); 
+    await this.refreshExplorer();
     event.stopPropagation();
-  }
-
-  reRenderComponent(){
-    this.forceUpdate();
-    this.realignTabs();
   }
 
   getExplorerItems(){
@@ -75,9 +83,40 @@ class Explorer extends React.Component{
   }
 
   getExplorerItemImg(item){
-    if(item.type === "1"){
+    if(item.type === "1" && item.openChild && item.openChild === true){
+      return <img src={folderOpen} alt="folderOpen"></img>  
+    } else if(item.type === "1" && item.openChild && item.openChild === true){
       return <img src={folderClose} alt="folder"></img>  
     }
+    return <img src={folderClose} alt="folder"></img>  
+  }
+
+  getPath(){
+    if(this.state.explorerData.tabs[this.state.explorerData.activeTabId])
+      return this.state.explorerData.tabs[this.state.explorerData.activeTabId].path
+    else
+      return "";
+  }
+
+  getleftSideMenu(itemDetails){
+    let sideMenu = [];
+      if(!itemDetails) return sideMenu;
+      sideMenu.push(<ul class="directory-list">
+        {(() => {
+          let subMenuChild = [];
+          for(let itemIndex=0;itemIndex<itemDetails.length;itemIndex++){
+            subMenuChild.push(
+            <li>
+              {this.getExplorerItemImg(itemDetails[itemIndex])}
+              <span>{itemDetails[itemIndex].name}</span>
+              {this.getleftSideMenu(itemDetails[itemIndex].children)}
+            </li>
+            );            
+          }
+          return subMenuChild;
+        })()}   
+      </ul>);
+    return sideMenu;
   }
 
   render() {
@@ -91,7 +130,7 @@ class Explorer extends React.Component{
                 for(let tabIndex=0;tabIndex<this.state.explorerData.tabs.length;tabIndex++){
                   tabData.push(
                   <div className="chrome-tab" active={(this.state.explorerData.activeTabId === tabIndex)+""} 
-                  onClick={()=>{this.updateActiveTabId(tabIndex)}}               
+                  onClick={()=>this.updateActiveTabId(tabIndex)}               
                   style={{'width':(this.state.tabWidth)+'px','transform':'translate3d('+tabIndex*(this.state.tabWidth-20)+'px, 0, 0)'}}>
                   <div className="chrome-tab-dividers"></div>
                   <div className="chrome-tab-background">
@@ -155,7 +194,7 @@ class Explorer extends React.Component{
                 </div>                
                 <div id="address">
                   <input id="homesearch" autoComplete="off" type="text" 
-                  value={this.state.explorerData.tabs[this.state.explorerData.activeTabId].path} />
+                  value={this.getPath()} />
                   <div className="searchresults" >
 
                   </div>
@@ -175,8 +214,7 @@ class Explorer extends React.Component{
             <div className="tabBody">
               <div className="explorer">
                 <div className="leftMenu">
-                  <ul className="directory-list">
-                  </ul>
+                  {this.getleftSideMenu(this.state.explorerMenu)}
                 </div>
                 <div className="rightMenu">
                   <div className="menubar">
@@ -206,7 +244,7 @@ class Explorer extends React.Component{
                         let data = [];                  
                         for(let itemIndex=0;itemIndex<this.state.activeExplorerItems.length;itemIndex++){
                           data.push(
-                          <div className="child inline-block-child">
+                          <div className="child inline-block-child" onDoubleClick={()=>this.openinSameTab(this.state.activeExplorerItems[itemIndex])}>
                             {this.getExplorerItemImg(this.state.activeExplorerItems[itemIndex])}
                             <div className="title">
                               <input type="text" id={this.state.activeExplorerItems[itemIndex].name} onChange={""} value={this.state.activeExplorerItems[itemIndex].name} autoComplete="off" />

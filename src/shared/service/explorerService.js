@@ -7,7 +7,6 @@ export default class ExplorerService {
     explorerMenu;
     activeExplorerItems;
     generatorService;
-    isrefreshed = false;
     constructor(){
         this.explorerData = new ExplorerData();
         this.generatorService = new GeneratorService();
@@ -17,10 +16,8 @@ export default class ExplorerService {
     }
 
     async refreshExplorer(){
-      this.isrefreshed = false;
       this.explorerMenu = await this.getExplorerMenu("/");
       this.activeExplorerItems = this.getItems();
-      this.isrefreshed = true;
     }
 
     async getExplorerMenu(pid){
@@ -41,10 +38,6 @@ export default class ExplorerService {
             console.error("Error adding document: ", pid);
         });
       return explorerMenu;
-    }
-
-    getActiveExplorerItems(){
-      
     }
 
     getExplorerItemsFromFirestoreData(data, pid){
@@ -81,26 +74,46 @@ export default class ExplorerService {
       this.explorerData.tabs.push(tabjson);
     }
 
-    closeTab(tabIndex){
+    async closeTab(tabIndex){
 
       if(this.explorerData.tabs.length === 1) return;
       if(this.explorerData.activeTabId === tabIndex){
         if(tabIndex>0){
-          this.openTab(tabIndex-1);
+          await this.openTab(tabIndex-1);
         }else{
-          this.openTab(tabIndex);
+          await this.openTab(tabIndex);
         }
       }else if(this.explorerData.activeTabId<tabIndex){
         // no need to change active tabId
-        this.openTab(this.explorerData.activeTabId);
+        await this.openTab(this.explorerData.activeTabId);
       }else{
-        this.openTab(this.explorerData.activeTabId-1);
+        await this.openTab(this.explorerData.activeTabId-1);
       }
       this.explorerData.tabs.splice(tabIndex,1);
     }
 
-    openTab(tabIndex){
+    async openTab(tabIndex){
       this.explorerData.activeTabId = tabIndex;
+      await this.refreshExplorer();
+    }
+
+    async openInSameTab(itemDetails){
+      if (await this.checkTabs(itemDetails.id)) {
+        return;
+      }else{
+        this.addNewTab(itemDetails.path, itemDetails.name, itemDetails.desc, itemDetails.type,itemDetails.id);
+        await this.openTab(this.explorerData.tabs.length-1);
+      }
+    }
+
+    async checkTabs(id){
+      for(let i = 0;i<this.explorerData.tabs.length;i++){
+        if(this.explorerData.tabs[i].id === id){
+          await this.openTab(i);
+          return true;
+        }
+      }
+      return false;
     }
 
     clearTabs(){
