@@ -58,10 +58,14 @@ class Explorer extends React.Component{
     await this.refreshExplorer();
   }
 
-  async closeTab(event,tabIndex){
-    this.explorerService.closeTab(tabIndex); 
-    await this.refreshExplorer();
-    event.stopPropagation();
+  async closeTab(tabIndex){
+    await this.explorerService.closeTab(tabIndex); 
+    this.setState({
+      explorerMenu : this.explorerService.explorerMenu,   
+      activeExplorerItems:this.explorerService.activeExplorerItems, 
+      explorerData:this.explorerService.explorerData,  
+    });
+    this.realignTabs();    
   }
 
   getExplorerItems(){
@@ -159,7 +163,7 @@ class Explorer extends React.Component{
                     <div className="chrome-tab-drag-handle"></div>
                     {this.state.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
                      <div className="chrome-tab-close" 
-                     onClick={(e)=>{this.closeTab(e,tabIndex)}}></div> 
+                     onClick={(e)=>{this.closeTab(tabIndex);e.preventDefault(); e.stopPropagation();e.nativeEvent.stopImmediatePropagation()}}></div> 
                     }                    
                   </div>
                 </div>
