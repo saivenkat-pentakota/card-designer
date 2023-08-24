@@ -1,15 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./sign-in.component.css";
+import "./sign-in.css";
 import logo from "../../assets/images/signin/nature.svg";
 
 class signIn extends React.Component {
-  constructor() {}
+  constructor() {
+    super();
+  }
 
   render() {
     return (
       <div className="displayTable">
-        <div class="displayTableCell">
+        <div className="displayTableCell">
           <div className="authBlock">
             <h3>Sign In</h3>
             <div className="formGroup">
@@ -29,11 +31,11 @@ class signIn extends React.Component {
               />
             </div>
             {/* calling SignIn Api from AuthService */}
-            <div class="formGroup">
+            <div className="formGroup">
               <input
-                style="height: 50px;"
+                style= {{height: "50px"}}
                 type="button"
-                class="btn btnPrimary"
+                className ="btn btnPrimary"
                 value="Log in"
                 // onClick="authService.SignIn(userName.value, userPassword.value)"
               />

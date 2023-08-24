@@ -9,7 +9,7 @@ import ProtectedRoute from './components/protectedRoute';
 import {UserAuthContextProvider} from './context/userAuthContext';
 import Explorer from "./components/explorer/explorer";
 
-import SignIn from "./components/sign-in/sign-in.component";
+import SignIn from "./components/sign-in/sign-in";
 import SignUp from "./components/sign-up/sign-up.components"
 
 
@@ -27,8 +27,8 @@ function App() {
             <Route path = "/" element = {<Explorer/>}/>  
             <Route path = "/signupForm" element = {<SignUpForm/>}/>  
             <Route path = "/phonesignup" element = {<PhoneSignUp/>}/>
-            <Route path="/signin" element = {SignIn}/>
-            <Route path = "/signup" element = {SignUp}/>
+            <Route path="/signin" element = {<SignIn/>}/>
+            <Route path = "/signup" element = {<SignUp/>}/>
           </Routes>
           </UserAuthContextProvider>
           

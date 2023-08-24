@@ -159,7 +159,7 @@ class Explorer extends React.Component{
                     <div className="chrome-tab-drag-handle"></div>
                     {this.state.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
                      <div className="chrome-tab-close" 
-                     onClick={(e)=>{this.closeTab(e,tabIndex)}}></div> 
+                     onClick = {(e)=>{this.closeTab(e,tabIndex)}}></div> 
                     }                    
                   </div>
                 </div>
