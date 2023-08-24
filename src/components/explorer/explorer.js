@@ -40,7 +40,7 @@ class Explorer extends React.Component{
 
   async openinSameTab(itemDetails){
     await this.explorerService.openInSameTab(itemDetails)
-    this.setState({
+    await this.setState({
       explorerMenu : this.explorerService.explorerMenu,   
       activeExplorerItems:this.explorerService.activeExplorerItems, 
       explorerData:this.explorerService.explorerData,  
@@ -110,7 +110,7 @@ class Explorer extends React.Component{
           let subMenuChild = [];
           for(let itemIndex=0;itemIndex<itemDetails.length;itemIndex++){
             subMenuChild.push(
-            <li>
+            <li onDoubleClick={(e)=>{this.openinSameTab(itemDetails[itemIndex]);e.preventDefault(); e.stopPropagation();e.nativeEvent.stopImmediatePropagation()}}>
               {this.getExplorerItemImg(itemDetails[itemIndex])}
               <span>{itemDetails[itemIndex].name}</span>
               {this.getleftSideMenu(itemDetails[itemIndex].children)}
