@@ -104,7 +104,7 @@ class Explorer extends React.Component{
 
   getleftSideMenu(itemDetails){
     let sideMenu = [];
-      if(!itemDetails) return sideMenu;
+      if(!itemDetails || itemDetails.length === 0) return sideMenu;
       sideMenu.push(<ul class="directory-list">
         {(() => {
           let subMenuChild = [];
