@@ -164,7 +164,7 @@ class Explorer extends React.Component{
                     {this.state.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
                      <div className="chrome-tab-close" 
                      onClick={(e)=>{this.closeTab(tabIndex);e.preventDefault(); e.stopPropagation();e.nativeEvent.stopImmediatePropagation()}}></div> 
-                     onClick = {(e)=>{this.closeTab(e,tabIndex)}}></div> 
+                   
                     }                    
                   </div>
                 </div>
