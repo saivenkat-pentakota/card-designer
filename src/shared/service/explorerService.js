@@ -193,4 +193,15 @@ export default class ExplorerService {
         });
     }
 
+    updateItemName(fileDetails){
+      const db = FireBase.firestore();
+      db.collection("userExplorerDetails/lkzujvHDpUUQsrPHcUMJ/explorerDetails/").doc(fileDetails.id).update(fileDetails)
+        .then((docRef) => {
+            console.log("Document written with ID: ", docRef.id);
+        })
+        .catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+    }
+
 }

@@ -7,6 +7,7 @@ import ExplorerService from "../../shared/service/explorerService";
 import ExplorerData from "../../shared/data/explorerData";
 import folderClose from "../../assets/images/menu/folderclose.svg";
 import folderOpen from "../../assets/images/menu/folderopen.svg";
+import designer from "../../assets/images/explorer/designer.svg";
 
 
 const tabContentMargin ={
@@ -37,8 +38,19 @@ class Explorer extends React.Component{
     this.realignTabs();
   }
 
+  async addNewFolder(event){
+    event.preventDefault(); 
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    await this.explorerService.addNewFolder();
+    await this.refreshExplorer();
+  }
 
-  async openinSameTab(itemDetails){
+
+  async openinSameTab(event,itemDetails){
+    event.preventDefault(); 
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
     await this.explorerService.openInSameTab(itemDetails)
     await this.setState({
       explorerMenu : this.explorerService.explorerMenu,   
@@ -58,7 +70,10 @@ class Explorer extends React.Component{
     await this.refreshExplorer();
   }
 
-  async closeTab(tabIndex){
+  async closeTab(e,tabIndex){
+    e.preventDefault();
+    e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
     await this.explorerService.closeTab(tabIndex); 
     this.setState({
       explorerMenu : this.explorerService.explorerMenu,   
@@ -110,7 +125,7 @@ class Explorer extends React.Component{
           let subMenuChild = [];
           for(let itemIndex=0;itemIndex<itemDetails.length;itemIndex++){
             subMenuChild.push(
-            <li onDoubleClick={(e)=>{this.openinSameTab(itemDetails[itemIndex]);e.preventDefault(); e.stopPropagation();e.nativeEvent.stopImmediatePropagation()}}>
+            <li onDoubleClick={(e)=>{this.openinSameTab(e,itemDetails[itemIndex])}}>
               {this.getExplorerItemImg(itemDetails[itemIndex])}
               <span>{itemDetails[itemIndex].name}</span>
               {this.getleftSideMenu(itemDetails[itemIndex].children)}
@@ -121,6 +136,19 @@ class Explorer extends React.Component{
         })()}   
       </ul>);
     return sideMenu;
+  }
+
+  async updateItemName(event, itemIndex){
+    event.preventDefault();
+    event.stopPropagation();
+    event.nativeEvent.stopImmediatePropagation();
+    await this.explorerService.updateItemName(this.state.activeExplorerItems[itemIndex]);
+    await this.refreshExplorer();
+  }
+
+  handleChange(e, itemIndex){
+    this.state.activeExplorerItems[itemIndex].name = e.target.value;
+    this.setState({[this.state.activeExplorerItems[itemIndex].name]:[e.target.value]});
   }
 
   render() {
@@ -163,7 +191,7 @@ class Explorer extends React.Component{
                     <div className="chrome-tab-drag-handle"></div>
                     {this.state.explorerData.tabs[tabIndex].id !== "FE_0000001" &&
                      <div className="chrome-tab-close" 
-                     onClick={(e)=>{this.closeTab(tabIndex);e.preventDefault(); e.stopPropagation();e.nativeEvent.stopImmediatePropagation()}}></div> 
+                     onClick={(e)=>{this.closeTab(e,tabIndex)}}></div> 
                    
                     }                    
                   </div>
@@ -198,7 +226,7 @@ class Explorer extends React.Component{
                   <img src={unlockSvg} alt="unlock" className="https"></img>                
                 </div>                
                 <div id="address">
-                  <input id="homesearch" autoComplete="off" type="text" 
+                  <input id="homesearch" autoComplete="off" type="text"
                   value={this.getPath()} />
                   <div className="searchresults" >
 
@@ -252,13 +280,19 @@ class Explorer extends React.Component{
                           <div className="child inline-block-child" onDoubleClick={()=>this.openinSameTab(this.state.activeExplorerItems[itemIndex])}>
                             {this.getExplorerItemImg(this.state.activeExplorerItems[itemIndex])}
                             <div className="title">
-                              <input type="text" id={this.state.activeExplorerItems[itemIndex].name} onChange={""} value={this.state.activeExplorerItems[itemIndex].name} autoComplete="off" />
+                              <input type="text" name={this.state.activeExplorerItems[itemIndex].name} 
+                              onBlur={(e)=>{this.updateItemName(e, itemIndex)}}
+                              defaultValue={this.state.activeExplorerItems[itemIndex].name} onChange={(e)=>this.handleChange(e, itemIndex)}></input>
                             </div>
                           </div>
                           )
                         }
                         return data;
                       })()}
+                    </div>
+                    <div className="footerMenu">
+                      <div onClick={(e)=>this.addNewFolder(e)}><img src={folderOpen} alt="add new folder"></img></div>
+                      <div><img src={designer} alt="add new design"></img></div>
                     </div>
                  </div>
                 </div>

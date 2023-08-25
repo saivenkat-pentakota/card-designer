@@ -1214,3 +1214,16 @@ hr{
   .filterdatapathandname{
     width: 100%;
   }
+
+  .footerMenu{
+    display: flex;
+    bottom: 3%;
+    position: fixed;
+    right: 3%;
+  }
+
+  .footerMenu img{
+    height: 20px;
+    margin: 2px 5px;
+    cursor: pointer;
+  }
