@@ -277,7 +277,7 @@ class Explorer extends React.Component{
                         let data = [];                  
                         for(let itemIndex=0;itemIndex<this.state.activeExplorerItems.length;itemIndex++){
                           data.push(
-                          <div className="child inline-block-child" onDoubleClick={()=>this.openinSameTab(this.state.activeExplorerItems[itemIndex])}>
+                          <div className="child inline-block-child" onDoubleClick={(e)=>this.openinSameTab(e,this.state.activeExplorerItems[itemIndex])}>
                             {this.getExplorerItemImg(this.state.activeExplorerItems[itemIndex])}
                             <div className="title">
                               <input type="text" name={this.state.activeExplorerItems[itemIndex].name} 

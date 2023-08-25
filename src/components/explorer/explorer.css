@@ -1220,10 +1220,10 @@ hr{
     bottom: 3%;
     position: fixed;
     right: 3%;
+    cursor: pointer;
   }
 
   .footerMenu img{
     height: 20px;
     margin: 2px 5px;
-    cursor: pointer;
   }
